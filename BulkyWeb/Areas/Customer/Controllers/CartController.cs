@@ -132,7 +132,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
                 foreach(var item in ShoppingCartVM.ShoppingCartList)
                 {
-                    var SessionLineItem = new SessionLineItemOptions
+                    var sessionLineItem = new SessionLineItemOptions
                     {
                         PriceData = new SessionLineItemPriceDataOptions()
                         {
@@ -145,7 +145,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
                         },
                         Quantity = item.Count
                     };
-                    options.LineItems.Add(SessionLineItem);
+                    options.LineItems.Add(sessionLineItem);
                 }
 
                 var service = new SessionService();
@@ -215,7 +215,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             var cartFromDb = _unitOfWork.ShoppingCart.Get(u => u.Id == cartId);
             _unitOfWork.ShoppingCart.Remove(cartFromDb);
             _unitOfWork.Save();
-
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count());
             return RedirectToAction(nameof(Index));
         }
 
