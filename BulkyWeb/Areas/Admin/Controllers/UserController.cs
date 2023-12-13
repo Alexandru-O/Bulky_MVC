@@ -1,5 +1,4 @@
 ﻿using Bulky.DataAccess.Data;
-using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
 using Bulky.Models.ViewModels;
 using Bulky.Utility;
@@ -24,6 +23,24 @@ namespace BulkyWeb.Areas.Admin.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult RoleManagement(string userId)
+        {
+            RoleManagementVM roleManagementVM = new()
+            {
+                ApplicationUser = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId),
+                CompanyList = _db.Companies.Select(u => new SelectListItem
+                {
+                    Text = u.Name,
+                    Value = u.Id.ToString(),
+                }),
+                RoleList = _db.Roles.Select(u => new SelectListItem 
+                { 
+                    Text = u.Name, Value = u.Id 
+                })
+            };
+            return View(roleManagementVM);
         }
 
         #region API CALLS
