@@ -1,7 +1,7 @@
 ﻿@model RoleManagementVM
 
 <div class="card shadow border-0 mt-4">
-    <div class="card-header bg-secondary bg-gradient m-lg-0 py-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
                 <h2 class="py-2 text-white">Manage User Role</h2>
@@ -9,52 +9,36 @@
         </div>
     </div>
     <div class="card-body p-4">
-        <div class="row pt-3">
-            <div class="col-md-12">
-                <form method="post" class="row" enctype="multipart/form-data">
-
-                    <div class="form-floating mb-3 col-md-6">
-                        <input asp-for="ApplicationUser.Name" class="form-control" placeholder="" />
-                        <label asp-for="ApplicationUser.Name" class="ms-2 text-muted">Full Name</label>
-                        <span asp-validation-for="ApplicationUser.Name" class="text-danger"></span>
+        <form method="post" class="row" enctype="multipart/form-data">
+            <input asp-for="ApplicationUser.Id" hidden />
+            <div class="border p-3">
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="ApplicationUser.Name" class="form-control" placeholder="" />
+                    <label asp-for="ApplicationUser.Name" class="ms-2 text-muted">Full Name</label>
+                    <span asp-validation-for="ApplicationUser.Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="ApplicationUser.Role" asp-items="@Model.RoleList" class="form-select">
+                        <option disabled selected>-Select Role-</option>
+                    </select>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="ApplicationUser.CompanyId" style="display:none" asp-items="@Model.CompanyList" class="form-select">
+                        <option disabled selected>-Select Company-</option>
+                    </select>
+                </div>
+                <div class="row pt-2">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-primary form-control">Update Role</button>
                     </div>
-                    <div class="form-floating mb-3 col-md-6">
-                        <select asp-for="ApplicationUser.Role" asp-items="@Model.RoleList" class="form-select py-0">
-                            @if (Model.ApplicationUser.Role != null)
-                            {
-                                <option selected">@Model.ApplicationUser.Role</option>
-                            }
-                            else
-                            {
-                                <option disabled selected>-Select Role-</option>
-                            }
-                        </select>
+                    <div class="col-6 col-md-3">
+                        <a asp-action="Index" class="btn btn-outline-primary border form-control">
+                            Back to List
+                        </a>
                     </div>
-                    <div class="form-floating mb-3 col-md-6">
-                        <select asp-for="ApplicationUser.CompanyId" style="display:none" asp-items="@Model.CompanyList" class="form-select py-0">
-                            @if (Model.ApplicationUser.Company == null)
-                            {
-                                <option disabled selected>-Select Company-</option>
-                            }
-                            else
-                            {
-                                <option selected value="@Model.ApplicationUser.Company.Id">@Model.ApplicationUser.Company.Name</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="row pt-2">
-                        <div class="col-6 col-md-3">
-                            <button type="submit" class="btn btn-primary form-control">Update</button>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <a asp-controller="User" asp-action="Index" class="btn btn-outline-primary border form-control">
-                                Back to List
-                            </a>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -64,7 +48,9 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
-            $('#ApplicationUser_Role').change(function () {
+            $('#ApplicationUser_Role').change(checkRole).change();
+
+            function checkRole () {
                 var selection = $('#ApplicationUser_Role Option:Selected').text();
                 if (selection == 'Company') {
                     $('#ApplicationUser_CompanyId').show();
@@ -72,7 +58,7 @@
                 else {
                     $('#ApplicationUser_CompanyId').hide();
                 }
-            })
+            }
         })
     </script>
 }
